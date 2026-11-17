@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090a0f">
+<title>PUBG DNS PRO v5 — MCI Dashboard</title>
+<style>
+:root{color-scheme:dark;--bg:#090a0f;--panel:#151720;--panel2:#1d202b;--line:#343746;--red:#ff294d;--pink:#ff477e;--muted:#a3a7b8;--green:#55e6a5;--amber:#ffc56d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#5b1427 0,transparent 45%),linear-gradient(180deg,#0c0d13,#090a0f 60%);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#f7f7fb;min-height:100vh;padding:20px 14px 38px}
+main{width:100%;max-width:920px;margin:0 auto}.hero{text-align:center;padding:16px 8px 20px}.logo{font-size:clamp(30px,8vw,48px);font-weight:1000;letter-spacing:1px;color:#ff315b;text-shadow:0 0 10px #ff315b99,0 0 30px #ff315b55}.sub{font-size:11px;letter-spacing:2px;color:#a8aabb}.tag{display:inline-flex;gap:7px;align-items:center;border:1px solid #315e4a;color:var(--green);border-radius:30px;padding:6px 12px;font-size:12px;margin-top:12px}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.card{background:linear-gradient(145deg,#1b1d28ee,#12141cee);border:1px solid var(--line);border-radius:18px;padding:21px;margin:14px 0;box-shadow:0 12px 30px #0005,0 0 18px #ff294d0b}.card h2{font-size:18px;margin:0 0 16px;display:flex;align-items:center;gap:8px}.card h2:before{content:"";width:4px;height:18px;border-radius:4px;background:var(--red);box-shadow:0 0 10px var(--red)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stat{background:#0d0f16;border:1px solid #2b2e3b;border-radius:14px;padding:15px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{display:block;font-size:22px;margin-top:6px;direction:ltr;text-align:right}.muted{color:var(--muted);font-size:12px;line-height:1.85}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.choice,.btn{font:inherit;border:1px solid #45495a;border-radius:12px;padding:13px;background:#11131b;color:#fff;cursor:pointer}.choice.active{border-color:var(--red);background:#401725;box-shadow:inset 0 0 0 1px var(--red),0 0 16px #ff294d20}.btn{background:var(--red);border-color:var(--red);font-weight:800}.btn.alt{background:#2a2d39;border-color:#45495a}.btn.ghost{background:transparent;border-color:#55596b}.btn:disabled{opacity:.5;cursor:wait}.wide{width:100%;margin-top:11px}
+.field{margin-top:12px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field input{width:100%;border:1px solid #414555;background:#0c0e15;color:white;border-radius:10px;padding:14px;font:inherit;direction:ltr;text-align:left;outline:none}.field input:focus{border-color:var(--pink)}
+.value{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#0c0e15;padding:10px 11px;border:1px solid #292d3a;border-radius:10px;direction:ltr}.value code{font-size:16px}.copy{border:0;border-radius:8px;background:#333746;color:white;padding:8px 10px;cursor:pointer}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.badge{font-size:11px;padding:5px 9px;border-radius:20px;background:#342b1e;color:var(--amber)}.badge.good{background:#163a2c;color:var(--green)}.badge.bad{background:#451b28;color:#ff8ca2}
+canvas{width:100%;height:150px;background:#0c0e15;border:1px solid #292d3a;border-radius:12px;margin-top:12px}
+.history{display:grid;gap:7px;margin-top:10px}.hist{display:flex;justify-content:space-between;background:#0d0f16;border-radius:9px;padding:9px 11px;font-size:12px;color:#d8d9e1;gap:8px}.hist span:last-child{direction:ltr;color:var(--green)}
+ol{padding-right:21px;margin:0;line-height:2.1;font-size:13px;color:#e1e2e9}.tips{display:grid;gap:9px}.tip{background:#0d0f16;border:1px solid #2a2e3a;padding:11px;border-radius:11px;font-size:13px;line-height:1.8}.tip b{color:#ff7894}
+footer{text-align:center;color:#777d90;font-size:11px;padding:18px 6px;line-height:1.8}.telegram-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin:0 auto 13px;padding:12px 20px;border:1px solid #2b9bd6;border-radius:13px;background:linear-gradient(135deg,#12344a,#10202e);color:#e8f7ff;text-decoration:none;font-size:14px;font-weight:800;box-shadow:0 0 18px #229ed633;transition:.2s}.telegram-link:hover{transform:translateY(-2px);box-shadow:0 0 24px #229ed677}.telegram-link span{font-size:18px}
+@media(max-width:390px){body{padding:12px 8px 28px}.card{padding:16px;margin:10px 0}.grid{grid-template-columns:1fr 1fr;gap:8px}.stat{padding:12px}.stat strong{font-size:17px}.choice,.btn{padding:12px}}
+
+/* v5 dashboard layer */
+html{scroll-behavior:smooth;scroll-padding-top:14px}.hero{position:relative}.hero:after{content:"MCI • GAMING NETWORK";display:block;margin:13px auto 0;width:max-content;max-width:100%;font-size:10px;letter-spacing:2px;color:#ff9caf;border:1px solid #713044;border-radius:30px;padding:6px 12px;background:#240f19}.dash{background:linear-gradient(130deg,#24111c 0%,#151720 58%,#10131b 100%);border:1px solid #713044;border-radius:20px;padding:17px;margin:4px 0 16px;box-shadow:0 15px 35px #0007,0 0 24px #ff294d14}.dash-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.dash-head h2{font-size:17px;margin:0}.live-pill{font-size:10px;color:#55e6a5;border:1px solid #286347;background:#10291f;border-radius:20px;padding:6px 9px;white-space:nowrap}.dash-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.dash-metric{background:#0b0d14c9;border:1px solid #38303b;border-radius:13px;padding:12px;min-width:0}.dash-metric small{display:block;color:#aeb0bd;font-size:10px}.dash-metric strong{display:block;font-size:19px;margin-top:5px;direction:ltr;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dash-metric em{font-style:normal;color:#ff819a;font-size:10px}.dash-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.dash-actions a,.dash-actions button{display:flex;align-items:center;justify-content:center;text-decoration:none;text-align:center;border:1px solid #49404b;background:#1a1c27;color:#f6f2f5;border-radius:11px;padding:11px 8px;font:inherit;font-size:12px;font-weight:750;cursor:pointer}.dash-actions .primary{background:#a91e3c;border-color:#e73559}.dash-foot{font-size:10px;color:#9295a5;line-height:1.8;margin:10px 2px 0}.card{scroll-margin-top:12px}.card h2{letter-spacing:-.2px}.card:focus-within{border-color:#69404c}@media(min-width:650px){.dash-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.dash-actions{grid-template-columns:repeat(4,minmax(0,1fr))}.dash-metric strong{font-size:21px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+</style>
+</head>
+<body>
+<main>
+<header class="hero">
+ <div class="logo">PUBG DNS PRO</div>
+ <div class="sub">NEON NETWORK TOOLKIT • ANDROID</div>
+ <div class="tag"><i class="dot"></i> نسخه همراه اول / MCI</div>
+</header>
+<section class="dash" aria-label="داشبورد سریع">
+ <div class="dash-head"><h2>داشبورد وضعیت بازی</h2><span class="live-pill" id="dashLive">● آماده بررسی</span></div>
+ <div class="dash-grid">
+  <div class="dash-metric"><small>وضعیت اینترنت</small><strong id="dashOnline">—</strong><em>وضعیت مرورگر</em></div>
+  <div class="dash-metric"><small>آخرین پاسخ</small><strong id="dashPing">—</strong><em>اندازه‌گیری تقریبی</em></div>
+  <div class="dash-metric"><small>پایداری شبکه</small><strong id="dashQuality">—</strong><em id="dashQualityHint">پس از تست</em></div>
+  <div class="dash-metric"><small>DNS انتخاب‌شده</small><strong id="dashDns">1.1.1.1</strong><em id="dashHost">one.one.one.one</em></div>
+ </div>
+ <div class="dash-actions">
+  <button class="primary" id="dashQuickPing">⚡ تست سریع</button>
+  <a href="#dnsSettings">تنظیم DNS</a>
+  <a href="#networkTest">نمودار پینگ</a>
+  <a href="#qualityPanel">تحلیل شبکه</a>
+ </div>
+ <p class="dash-foot">این داشبورد فقط داده‌های همین پنل را خلاصه می‌کند؛ وضعیت واقعی اتصال به سرور PUBG را تأیید نمی‌کند.</p>
+</section>
+
+<section class="card" id="connectionStatus">
+ <h2>وضعیت اتصال</h2>
+ <div class="grid">
+  <div class="stat"><small>اتصال دستگاه</small><strong id="onlineState">در حال بررسی</strong></div>
+  <div class="stat"><small>اپراتور انتخاب‌شده</small><strong style="font-size:16px">همراه اول</strong></div>
+ </div>
+ <p class="muted" id="networkNote">وضعیت آنلاین بودن مرورگر بررسی می‌شود. تشخیص قطعی اپراتور از داخل این فایل ممکن نیست.</p>
+ <div class="row"><span class="muted">تایمر تست اتصال</span><strong id="timer">00:00</strong></div>
+ <div class="row" style="margin-top:9px"><button class="btn alt" id="timerStart">شروع تایمر</button><button class="btn ghost" id="timerReset">بازنشانی</button></div>
+</section>
+
+<section class="card" id="dnsSettings">
+ <h2>انتخاب و تنظیم DNS</h2>
+ <div class="choices">
+  <button class="choice active" data-preset="cloudflare">Cloudflare<br><small>1.1.1.1</small></button>
+  <button class="choice" data-preset="google">Google DNS<br><small>8.8.8.8</small></button>
+  <button class="choice" data-preset="quad9">Quad9<br><small>9.9.9.9</small></button>
+  <button class="choice" data-preset="custom">DNS دلخواه</button>
+ </div>
+ <div class="field"><label for="dns1">DNS اصلی (IPv4)</label><input id="dns1" value="1.1.1.1" inputmode="decimal"></div>
+ <div class="field"><label for="dns2">DNS جایگزین (IPv4)</label><input id="dns2" value="1.0.0.1" inputmode="decimal"></div>
+ <div class="field"><label for="hostname">Private DNS hostname اندروید</label><input id="hostname" value="one.one.one.one" dir="ltr"></div>
+ <div class="row" style="margin-top:12px"><button class="btn" id="saveFav">☆ ذخیره موردعلاقه</button><button class="btn alt" id="loadFav">بارگذاری ذخیره‌شده</button></div>
+ <div class="row" style="margin-top:10px"><button class="copy" id="copyDns1">کپی DNS اصلی</button><button class="copy" id="copyDns2">کپی DNS جایگزین</button><button class="copy" id="copyHost">کپی hostname</button></div>
+ <p class="muted">این صفحه تنظیمات گوشی را مستقیماً تغییر نمی‌دهد؛ مقادیر را کپی کن و در تنظیمات اندروید وارد کن.</p>
+</section>
+
+<section class="card" id="networkTest">
+ <h2>تست پینگ و نمودار</h2>
+ <div class="grid">
+  <div class="stat"><small>آخرین زمان پاسخ</small><strong id="lastPing">— ms</strong></div>
+  <div class="stat"><small>میانگین این نوبت</small><strong id="avgPing">— ms</strong></div>
+  <div class="stat"><small>کمترین</small><strong id="minPing">— ms</strong></div>
+  <div class="stat"><small>بیشترین</small><strong id="maxPing">— ms</strong></div>
+ </div>
+ <canvas id="pingChart" width="620" height="180" aria-label="نمودار زمان پاسخ"></canvas>
+ <div class="row" style="margin-top:11px"><button class="btn" id="pingOnce">تست یک‌باره</button><button class="btn alt" id="pingRun">شروع تست پیوسته</button><button class="btn ghost" id="pingStop">توقف</button></div>
+ <div class="row" style="margin-top:10px"><span class="muted">تعداد نمونه‌ها: <b id="sampleCount">0</b></span><button class="copy" id="clearHistory">پاک‌کردن تاریخچه</button></div>
+ <div class="history" id="history"></div>
+ <p class="muted">اندازه‌گیری تقریبی زمان پاسخ یک سرویس عمومی است، نه پینگ مستقیم سرور پابجی. نتیجه ممکن است تحت‌تأثیر شبکه، فیلترینگ یا محدودیت مرورگر باشد.</p>
+</section>
+
+<section class="card" id="qualityPanel">
+ <h2>تحلیل کیفیت اتصال</h2>
+ <div class="grid">
+  <div class="stat"><small>نوسان پینگ (Jitter)</small><strong id="jitter">— ms</strong></div>
+  <div class="stat"><small>Packet Loss تخمینی</small><strong id="loss">— %</strong></div>
+  <div class="stat"><small>امتیاز پایداری</small><strong id="quality">— / 100</strong></div>
+  <div class="stat"><small>وضعیت شبکه</small><strong id="qualityLabel">منتظر تست</strong></div>
+ </div>
+ <button class="btn wide" id="qualityTest">تحلیل ۱۰ نمونه‌ای شبکه</button>
+ <button class="btn alt wide" id="exportReport">خروجی گزارش تست (TXT)</button>
+ <p class="muted">Packet Loss در این بخش بر اساس ناموفق‌شدن درخواست‌های آزمایشی مرورگر تخمین زده می‌شود و معادل اندازه‌گیری داخل بازی یا ابزار تخصصی شبکه نیست.</p>
+</section>
+
+<section class="card" id="smartDnsCard">
+ <h2>انتخاب هوشمند DNS</h2>
+ <p class="muted">سه سرویس DNS-over-HTTPS را از همین مرورگر چند بار آزمایش می‌کند و بر اساس میانگین زمان پاسخ، سریع‌ترین گزینهٔ قابل‌دسترسی را پیشنهاد می‌دهد.</p>
+ <div class="grid">
+  <div class="stat"><small>Cloudflare DoH</small><strong id="smartCloudflare">— ms</strong></div>
+  <div class="stat"><small>Google DoH</small><strong id="smartGoogle">— ms</strong></div>
+  <div class="stat"><small>Quad9 DoH</small><strong id="smartQuad9">— ms</strong></div>
+  <div class="stat"><small>پیشنهاد هوشمند</small><strong id="smartWinner" style="font-size:16px">منتظر تست</strong></div>
+ </div>
+ <button class="btn wide" id="smartTest">شروع مقایسه هوشمند DNS</button>
+ <button class="btn alt wide" id="applySmart" disabled>اعمال پیشنهاد در پنل</button>
+ <p class="muted" id="smartNote">این تست، زمان پاسخ APIهای DNS-over-HTTPS را از مرورگر مقایسه می‌کند؛ DNS واقعی سیستم یا پینگ سرور پابجی را اندازه نمی‌گیرد. نتیجه به مسیر شبکه، CORS و شرایط لحظه‌ای وابسته است.</p>
+</section>
+
+<section class="card">
+ <h2>تست سرعت دانلود و آپلود</h2>
+ <div class="grid">
+  <div class="stat"><small>دانلود تقریبی</small><strong id="downSpeed">— Mbps</strong></div>
+  <div class="stat"><small>آپلود تقریبی</small><strong id="upSpeed">— Mbps</strong></div>
+ </div>
+ <button class="btn wide" id="speedTest">شروع تست سرعت</button>
+ <p class="muted">برای تست از سرویس عمومی Cloudflare استفاده می‌شود. مصرف داده دارد و نتایج به سرور تست و شرایط شبکه وابسته است.</p>
+</section>
+
+<section class="card">
+ <h2>تنظیمات پیشنهادی پابجی</h2>
+ <ol>
+  <li>در صورت امکان از اتصال پایدار 4G/5G با آنتن‌دهی خوب استفاده کن.</li>
+  <li>دانلودها، آپدیت‌ها و پخش ویدئو در پس‌زمینه را متوقف کن.</li>
+  <li>در بازی نزدیک‌ترین منطقه سرور رسمی با پینگ پایدار را انتخاب کن.</li>
+  <li>گرافیک را متناسب با توان گوشی تنظیم کن؛ نرخ فریم پایدار را به کیفیت تصویری بالاتر ترجیح بده.</li>
+  <li>DNS را فقط در صورت سازگاری نگه دار؛ DNS معمولاً مسیر بازی را عوض نمی‌کند و کاهش پینگ را تضمین نمی‌کند.</li>
+ </ol>
+</section>
+
+<section class="card">
+ <h2>راهنمای رفع لگ و Packet Loss</h2>
+ <div class="tips">
+  <div class="tip"><b>پینگ بالا:</b> بین وای‌فای و دیتای موبایل مقایسه انجام بده، در محل با آنتن‌دهی بهتر تست کن و ساعات شلوغی شبکه را در نظر بگیر.</div>
+  <div class="tip"><b>Packet Loss:</b> اگر بازی امکان نمایش Packet Loss دارد، مقدار را داخل خود بازی بررسی کن. با VPNهای متعدد یا DNSهای ناشناس آزمایش نکن.</div>
+  <div class="tip"><b>نوسان پینگ:</b> حالت ذخیره باتری را هنگام بازی خاموش کن، برنامه‌های پس‌زمینه را ببند و گوشی را بیش از حد داغ نکن.</div>
+  <div class="tip"><b>قطع اتصال بعد از DNS:</b> Private DNS را روی Automatic یا Off برگردان و دوباره اتصال را بررسی کن.</div>
+ </div>
+</section>
+
+<section class="card">
+ <h2>فعال‌سازی Private DNS در اندروید</h2>
+ <ol>
+  <li>Settings را باز کن و وارد Network & Internet یا Connections شو.</li>
+  <li>گزینه Private DNS را پیدا کن.</li>
+  <li>Private DNS provider hostname را انتخاب کن.</li>
+  <li>Hostname انتخاب‌شده در این پنل را وارد و ذخیره کن.</li>
+  <li>اگر اینترنت قطع شد، تنظیم را روی Automatic برگردان.</li>
+ </ol>
+</section>
+<section class="card" id="vpnGermanyCard">
+ <h2>VPN گیمینگ آلمان • WireGuard</h2>
+ <div class="row"><span class="muted">وضعیت موتور VPN</span><span class="badge" id="wgStatus">آماده</span></div>
+ <p class="muted">کانفیگ WireGuard روی دستگاه و در حافظه پردازش می‌شود. پس از انتخاب فایل، برای ایجاد VPN مجوز استاندارد اندروید نمایش داده می‌شود.</p>
+ <input id="wgConfigFile" type="file" accept=".conf,text/plain" hidden>
+ <button class="btn wide" id="wgImport">انتخاب فایل کانفیگ ‎.conf</button>
+ <div id="wgInfo" class="tip" style="display:none;margin-top:12px"></div>
+ <div class="grid" style="margin-top:10px">
+  <div class="stat"><small>Endpoint سرور</small><strong id="wgEndpoint" style="font-size:14px">—</strong></div>
+  <div class="stat"><small>Allowed IPs</small><strong id="wgAllowed" style="font-size:13px">—</strong></div>
+ </div>
+ <button class="btn wide" id="wgConnect" disabled>اتصال به VPN آلمان</button>
+ <button class="btn wide alt" id="wgDisconnect" disabled>قطع اتصال VPN</button>
+ <p class="muted">امنیت: کلید خصوصی نمایش داده یا توسط این برنامه ذخیره نمی‌شود و کانفیگ به سرور برنامه ارسال نمی‌شود. اتصال فقط با کانفیگ معتبر و سرور WireGuard فعال کار می‌کند؛ انتخاب Endpoint آلمان به‌تنهایی کشور سرور را تضمین نمی‌کند.</p>
+</section>
+<footer><a class="telegram-link" href="https://t.me/PUBGPROV2" target="_blank" rel="noopener noreferrer"><span>✈</span> عضویت در کانال رسمی ما | PUBGPROV2</a><br>PUBG DNS PRO • ابزار کمکی مستقل • وابسته به PUBG یا همراه اول نیست<br>تست‌ها تقریبی‌اند؛ هیچ تغییری در تنظیمات شبکه گوشی بدون اقدام خودت انجام نمی‌شود.</footer>
+</main>
+<script>
+const presets={
+ cloudflare:{a:"1.1.1.1",b:"1.0.0.1",h:"one.one.one.one"},
+ google:{a:"8.8.8.8",b:"8.8.4.4",h:"dns.google"},
+ quad9:{a:"9.9.9.9",b:"149.112.112.112",h:"dns.quad9.net"}
+};
+const $=id=>document.getElementById(id);
+let samples=[],continuous=null,timerInt=null,seconds=0;
+try{samples=JSON.parse(localStorage.getItem("pubgDnsHistory")||"[]").filter(v=>v===null||(Number.isFinite(v)&&v>=0)).slice(-60)}catch(e){samples=[]}
+function setPreset(name){
+ document.querySelectorAll("[data-preset]").forEach(b=>b.classList.toggle("active",b.dataset.preset===name));
+ if(presets[name]){$("dns1").value=presets[name].a;$("dns2").value=presets[name].b;$("hostname").value=presets[name].h}
+}
+document.querySelectorAll("[data-preset]").forEach(b=>b.addEventListener("click",()=>setPreset(b.dataset.preset)));
+function updateOnline(){
+ const on=navigator.onLine;
+ $("onlineState").textContent=on?"آنلاین":"آفلاین";
+ $("onlineState").style.color=on?"#55e6a5":"#ff7894";
+ $("networkNote").textContent=on?"مرورگر اتصال شبکه را آنلاین گزارش می‌کند؛ اپراتور واقعی از این صفحه قابل تأیید نیست.":"مرورگر اتصال شبکه را آفلاین گزارش می‌کند.";
+}
+window.addEventListener("online",updateOnline);window.addEventListener("offline",updateOnline);updateOnline();
+function syncDashboard(){
+ const online=navigator.onLine;
+ $("dashOnline").textContent=online?"آنلاین":"آفلاین";
+ $("dashOnline").style.color=online?"#55e6a5":"#ff7894";
+ const last=samples.length?samples[samples.length-1]:null;
+ $("dashPing").textContent=Number.isFinite(last)?last+" ms":(samples.length?"ناموفق":"—");
+ const q=$("quality").textContent;
+ $("dashQuality").textContent=q.includes("/ 100")?q.replace(" / 100","")+"/100":"—";
+ $("dashQualityHint").textContent=$("qualityLabel").textContent||"پس از تست";
+ $("dashDns").textContent=$("dns1").value||"—";
+ $("dashHost").textContent=$("hostname").value||"Hostname تنظیم نشده";
+ $("dashLive").textContent=online?"● آماده بررسی":"● بدون اینترنت";
+ $("dashLive").style.color=online?"#55e6a5":"#ff8ca2";
+}
+$("dashQuickPing").onclick=()=>onePing();
+["dns1","hostname"].forEach(id=>$(id).addEventListener("input",syncDashboard));
+
+async function copyText(text,btn){
+ try{await navigator.clipboard.writeText(text)}catch(e){const x=document.createElement("textarea");x.value=text;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove()}
+ const old=btn.textContent;btn.textContent="کپی شد";setTimeout(()=>btn.textContent=old,1100);
+}
+$("copyDns1").onclick=e=>copyText($("dns1").value,e.currentTarget);
+$("copyDns2").onclick=e=>copyText($("dns2").value,e.currentTarget);
+$("copyHost").onclick=e=>copyText($("hostname").value,e.currentTarget);
+$("saveFav").onclick=()=>{localStorage.setItem("pubgDnsFavorite",JSON.stringify({a:$("dns1").value,b:$("dns2").value,h:$("hostname").value}));$("saveFav").textContent="★ ذخیره شد";setTimeout(()=>$("saveFav").textContent="☆ ذخیره موردعلاقه",1200)};
+$("loadFav").onclick=()=>{try{const f=JSON.parse(localStorage.getItem("pubgDnsFavorite"));if(!f)return alert("هنوز DNS موردعلاقه‌ای ذخیره نشده.");$("dns1").value=f.a;$("dns2").value=f.b;$("hostname").value=f.h;document.querySelectorAll("[data-preset]").forEach(b=>b.classList.remove("active"));}catch(e){alert("ذخیره‌ای پیدا نشد.")}};
+function drawChart(){
+ const c=$("pingChart"),ctx=c.getContext("2d"),w=c.width,h=c.height,p=28;ctx.clearRect(0,0,w,h);ctx.strokeStyle="#292d3a";ctx.lineWidth=1;
+ for(let i=0;i<4;i++){let y=p+i*(h-2*p)/3;ctx.beginPath();ctx.moveTo(p,y);ctx.lineTo(w-p,y);ctx.stroke()}
+ if(!samples.length){ctx.fillStyle="#8d92a4";ctx.font="14px sans-serif";ctx.textAlign="center";ctx.fillText("پس از تست، نمودار اینجا نمایش داده می‌شود",w/2,h/2);return}
+ const vals=samples.slice(-30).filter(v=>Number.isFinite(v)),max=Math.max(100,...vals)*1.15;
+ if(!vals.length){ctx.fillStyle="#8d92a4";ctx.font="14px sans-serif";ctx.textAlign="center";ctx.fillText("نمونه موفقی برای رسم نمودار نیست",w/2,h/2);return}
+ ctx.strokeStyle="#ff315b";ctx.lineWidth=3;ctx.beginPath();
+ vals.forEach((v,i)=>{let x=p+i*(w-2*p)/Math.max(1,vals.length-1),y=h-p-(v/max)*(h-2*p);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});
+ ctx.stroke();ctx.fillStyle="#ff7894";vals.forEach((v,i)=>{let x=p+i*(w-2*p)/Math.max(1,vals.length-1),y=h-p-(v/max)*(h-2*p);ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill()});
+}
+function renderSamples(){
+ const n=samples.length,ok=samples.filter(v=>Number.isFinite(v)); $("sampleCount").textContent=n;
+ if(ok.length){$("lastPing").textContent=Number.isFinite(samples[n-1])?samples[n-1]+" ms":"ناموفق";$("avgPing").textContent=Math.round(ok.reduce((a,b)=>a+b,0)/ok.length)+" ms";$("minPing").textContent=Math.min(...ok)+" ms";$("maxPing").textContent=Math.max(...ok)+" ms"}
+ else ["lastPing","avgPing","minPing","maxPing"].forEach(id=>$(id).textContent="— ms");
+ const diffs=ok.slice(1).map((v,i)=>Math.abs(v-ok[i]));const jitter=diffs.length?diffs.reduce((a,b)=>a+b,0)/diffs.length:null;const loss=n?((n-ok.length)/n*100):null;
+ $("jitter").textContent=jitter===null?"— ms":jitter.toFixed(1)+" ms";$("loss").textContent=loss===null?"— %":loss.toFixed(1)+" %";
+ const avg=ok.length?ok.reduce((a,b)=>a+b,0)/ok.length:Infinity;const score=n?Math.max(0,Math.round(100-Math.min(45,avg/4)-Math.min(35,(jitter||0)*1.5)-loss*.8)):null;
+ $("quality").textContent=score===null?"— / 100":score+" / 100";$("qualityLabel").textContent=score===null?"منتظر تست":score>=85?"عالی":score>=65?"قابل قبول":score>=40?"ضعیف":"ناپایدار";
+ localStorage.setItem("pubgDnsHistory",JSON.stringify(samples.slice(-60)));
+ drawChart();syncDashboard();const h=$("history");h.innerHTML="";
+ samples.slice(-8).reverse().forEach((v,i)=>{const d=document.createElement("div");d.className="hist";d.innerHTML="<span>نمونه "+(n-i)+"</span><span>"+(Number.isFinite(v)?v+" ms":"ناموفق")+"</span>";h.appendChild(d)});
+}
+async function ping(){
+ const start=performance.now();
+ try{await fetch("https://www.google.com/generate_204?nocache="+Date.now()+"-"+Math.random(),{mode:"no-cors",cache:"no-store"});return Math.round(performance.now()-start)}
+ catch(e){throw e}
+}
+async function onePing(){
+ $("pingOnce").disabled=true;
+ try{const v=await ping();samples.push(v);if(samples.length>60)samples.shift();renderSamples()}
+ catch(e){samples.push(null);if(samples.length>60)samples.shift();renderSamples()}
+ $("pingOnce").disabled=false;
+}
+$("pingOnce").onclick=onePing;
+$("pingRun").onclick=()=>{if(continuous)return;onePing();continuous=setInterval(onePing,3000);$("pingRun").textContent="تست پیوسته فعال"};
+$("pingStop").onclick=()=>{clearInterval(continuous);continuous=null;$("pingRun").textContent="شروع تست پیوسته"};
+$("clearHistory").onclick=()=>{samples=[];renderSamples()};
+$("timerStart").onclick=()=>{if(timerInt){clearInterval(timerInt);timerInt=null;$("timerStart").textContent="ادامه تایمر";return}timerInt=setInterval(()=>{seconds++;$("timer").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0")},1000);$("timerStart").textContent="توقف تایمر"};
+$("timerReset").onclick=()=>{clearInterval(timerInt);timerInt=null;seconds=0;$("timer").textContent="00:00";$("timerStart").textContent="شروع تایمر"};
+const dohProviders={
+ cloudflare:{label:"Cloudflare",url:"https://cloudflare-dns.com/dns-query?name=example.com&type=A",preset:"cloudflare"},
+ google:{label:"Google",url:"https://dns.google/resolve?name=example.com&type=A",preset:"google"},
+ quad9:{label:"Quad9",url:"https://dns.quad9.net/dns-query?name=example.com&type=A",preset:"quad9"}
+};
+let smartBest=null;
+async function measureDoh(provider){
+ const start=performance.now();
+ const response=await fetch(provider.url,{cache:"no-store",headers:{"Accept":"application/dns-json"}});
+ if(!response.ok)throw new Error("HTTP "+response.status);
+ const data=await response.json();
+ if(!data||data.Status!==0||!Array.isArray(data.Answer)||!data.Answer.length)throw new Error("پاسخ DNS نامعتبر");
+ return performance.now()-start;
+}
+$("smartTest").onclick=async()=>{
+ const btn=$("smartTest");btn.disabled=true;btn.textContent="در حال مقایسه…";smartBest=null;$("smartWinner").textContent="در حال تست";$("applySmart").disabled=true;
+ const results={};
+ for(const [key,provider] of Object.entries(dohProviders)){
+  const times=[];
+  for(let i=0;i<3;i++){try{times.push(await measureDoh(provider))}catch(e){} if(i<2)await new Promise(r=>setTimeout(r,350));}
+  if(times.length){times.sort((a,b)=>a-b);results[key]=times[Math.floor(times.length/2)];$("smart"+key[0].toUpperCase()+key.slice(1)).textContent=results[key].toFixed(0)+" ms";}
+  else $("smart"+key[0].toUpperCase()+key.slice(1)).textContent="ناموفق";
+ }
+ const ranked=Object.entries(results).sort((a,b)=>a[1]-b[1]);
+ if(ranked.length){smartBest=ranked[0][0];$("smartWinner").textContent=dohProviders[smartBest].label;$("applySmart").disabled=false;$("smartNote").textContent="پیشنهاد بر اساس میانهٔ ۳ تست موفق است. این نتیجه فقط سرعت دسترسی مرورگر به DoH را نشان می‌دهد؛ تضمین‌کنندهٔ پینگ بهتر بازی نیست.";}
+ else $("smartWinner").textContent="تست ناموفق";
+ btn.disabled=false;btn.textContent="تکرار مقایسه هوشمند DNS";
+};
+$("applySmart").onclick=()=>{if(!smartBest)return;setPreset(dohProviders[smartBest].preset);$("smartNote").textContent="مقادیر "+dohProviders[smartBest].label+" در پنل انتخاب شد. برای فعال‌سازی باید hostname را خودت در تنظیمات Private DNS اندروید وارد کنی.";};
+
+async function speedTest(){
+ const btn=$("speedTest");btn.disabled=true;btn.textContent="در حال تست دانلود…";$("downSpeed").textContent="…";$("upSpeed").textContent="…";
+ try{
+  const bytes=5*1024*1024,start=performance.now();
+  const r=await fetch("https://speed.cloudflare.com/__down?bytes="+bytes+"&t="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw Error("download");
+  const blob=await r.blob(),secs=(performance.now()-start)/1000;
+  $("downSpeed").textContent=((blob.size*8/secs)/1e6).toFixed(2)+" Mbps";
+ }catch(e){$("downSpeed").textContent="ناموفق"}
+ try{
+  btn.textContent="در حال تست آپلود…";const data=new Blob([new Uint8Array(1024*1024)]);
+  const start=performance.now();const r=await fetch("https://speed.cloudflare.com/__up",{method:"POST",body:data,headers:{"Content-Type":"application/octet-stream"}});
+  if(!r.ok)throw Error("upload");
+  const secs=(performance.now()-start)/1000;$("upSpeed").textContent=((data.size*8/secs)/1e6).toFixed(2)+" Mbps";
+ }catch(e){$("upSpeed").textContent="ناموفق"}
+ btn.disabled=false;btn.textContent="شروع تست سرعت";
+}
+$("speedTest").onclick=speedTest;
+
+$("qualityTest").onclick=async()=>{const b=$("qualityTest");b.disabled=true;for(let i=0;i<10;i++){try{const v=await ping();samples.push(v)}catch(e){samples.push(null)}if(samples.length>60)samples.shift();renderSamples();b.textContent="در حال تحلیل… "+(i+1)+"/10";if(i<9)await new Promise(r=>setTimeout(r,700))}b.disabled=false;b.textContent="تحلیل ۱۰ نمونه‌ای شبکه"};
+$("exportReport").onclick=()=>{const ok=samples.filter(Number.isFinite),n=samples.length,loss=n?(n-ok.length)/n*100:0,avg=ok.length?ok.reduce((a,b)=>a+b,0)/ok.length:0;const report=["PUBG DNS PRO - گزارش شبکه","تاریخ: "+new Date().toLocaleString("fa-IR"),"DNS: "+$("dns1").value+" / "+$("dns2").value,"Hostname: "+$("hostname").value,"تعداد نمونه: "+n,"میانگین پینگ: "+(ok.length?avg.toFixed(1)+" ms":"بدون داده"),"Packet Loss تخمینی: "+loss.toFixed(1)+"%","یادآوری: نتایج مرورگر تقریبی‌اند و پینگ مستقیم سرور بازی نیست."].join("\n");const blob=new Blob([report],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="pubg-dns-report.txt";a.click();URL.revokeObjectURL(url)};
+renderSamples();syncDashboard();
+
+// WireGuard config is parsed by the native WireGuard backend; private key is never shown or sent to an app server.
+$("wgImport").addEventListener("click",()=>$("wgConfigFile").click());
+$("wgConfigFile").addEventListener("change",async e=>{
+ const file=e.target.files && e.target.files[0]; if(!file)return;
+ const info=$("wgInfo");
+ try{
+  const raw=await file.text();
+  const clean=raw.split(/\r?\n/).map(x=>x.trim()).filter(x=>x && !x.startsWith("#"));
+  let section="", iface={}, peer={};
+  for(const line of clean){
+   if(/^\[.+\]$/.test(line)){section=line.slice(1,-1).toLowerCase();continue;}
+   const i=line.indexOf("="); if(i<1)continue;
+   const k=line.slice(0,i).trim().toLowerCase(),v=line.slice(i+1).trim();
+   if(section==="interface")iface[k]=v; else if(section==="peer")peer[k]=v;
+  }
+  if(!iface.privatekey || !peer.publickey || !peer.endpoint)throw new Error("ساختار فایل کامل نیست؛ بخش‌های Interface و Peer و مقادیر کلیدی لازم پیدا نشد.");
+  $("wgEndpoint").textContent=peer.endpoint;
+  $("wgAllowed").textContent=peer.allowedips||"تعریف نشده";
+  info.style.display="block";
+  info.textContent="کانفیگ از نظر ساختار اولیه قابل‌خواندن است. کلید خصوصی مخفی ماند. برای اتصال، دکمه زیر را بزن.";
+  window.wgRawConfig=raw;
+  $("wgConnect").disabled=false;
+ }catch(err){
+  $("wgEndpoint").textContent="—";$("wgAllowed").textContent="—";$("wgConnect").disabled=true;window.wgRawConfig=null;info.style.display="block";
+  info.textContent="خطا در بررسی فایل: "+(err.message||"فرمت نامعتبر");
+ }
+ e.target.value="";
+});
+
+
+$("wgConnect").addEventListener("click",()=>{
+ if(!window.wgRawConfig){$("wgInfo").textContent="ابتدا فایل کانفیگ را انتخاب کن.";return;}
+ if(window.AndroidVPN && AndroidVPN.connectWireGuard){$("wgConnect").disabled=true;$("wgStatus").textContent="در حال اتصال…";AndroidVPN.connectWireGuard(window.wgRawConfig);}
+ else {$("wgInfo").textContent="موتور VPN بومی فقط در نسخه نصب‌شده اندروید فعال است.";}
+});
+$("wgDisconnect").addEventListener("click",()=>{if(window.AndroidVPN)AndroidVPN.disconnectWireGuard();});
+window.onWireGuardState=function(state){
+ const labels={UP:"متصل",DOWN:"قطع",CONNECTING:"در حال اتصال…"};
+ $("wgStatus").textContent=labels[state]||state;
+ $("wgConnect").disabled=(state==="UP"||state==="CONNECTING"||!window.wgRawConfig);
+ $("wgDisconnect").disabled=(state!=="UP");
+};
+window.onWireGuardError=function(message){$("wgInfo").style.display="block";$("wgInfo").textContent="خطای VPN: "+message;$("wgStatus").textContent="خطا";$("wgConnect").disabled=!window.wgRawConfig;$("wgDisconnect").disabled=true;};
+if(window.AndroidVPN)AndroidVPN.getWireGuardState();
+
+</script>
+</body>
+</html>
